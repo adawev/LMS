@@ -7,6 +7,7 @@ import uz.edu.lms.dto.CreateLessonRequest;
 import uz.edu.lms.dto.VideoLessonDTO;
 import uz.edu.lms.entity.Module;
 import uz.edu.lms.entity.VideoLesson;
+import uz.edu.lms.exception.ResourceNotFoundException;
 import uz.edu.lms.repository.ModuleRepository;
 import uz.edu.lms.repository.VideoLessonRepository;
 
@@ -31,7 +32,7 @@ public class VideoLessonService {
 
             // Check if module already has a video lesson
             if (module != null && module.getVideoLesson() != null) {
-                throw new RuntimeException("Module already has a video lesson");
+                throw new IllegalArgumentException("Module already has a video lesson");
             }
         }
 
@@ -55,7 +56,7 @@ public class VideoLessonService {
     @Transactional
     public VideoLessonDTO updateLesson(Long id, CreateLessonRequest request) {
         VideoLesson videoLesson = videoLessonRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Video lesson not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("VideoLesson", "id", id));
 
         if (request.getTitle() != null) {
             videoLesson.setTitle(request.getTitle());
@@ -89,7 +90,7 @@ public class VideoLessonService {
     @Transactional(readOnly = true)
     public VideoLessonDTO getLessonById(Long id) {
         VideoLesson videoLesson = videoLessonRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Video lesson not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("VideoLesson", "id", id));
         return toDTO(videoLesson);
     }
 
@@ -112,7 +113,7 @@ public class VideoLessonService {
     @Transactional
     public void deleteLesson(Long id) {
         if (!videoLessonRepository.existsById(id)) {
-            throw new RuntimeException("Video lesson not found with id: " + id);
+            throw new ResourceNotFoundException("VideoLesson", "id", id);
         }
         videoLessonRepository.deleteById(id);
     }

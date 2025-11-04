@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.edu.lms.entity.Course;
 import uz.edu.lms.entity.User;
+import uz.edu.lms.exception.ResourceNotFoundException;
 import uz.edu.lms.repository.CourseRepository;
 import uz.edu.lms.repository.UserRepository;
 
@@ -26,12 +27,12 @@ public class CourseService {
 
     public Course getCourseById(Long id) {
         return courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course", "id", id));
     }
 
     public Course createCourse(Course course, Long teacherId) {
         User teacher = userRepository.findById(teacherId)
-                .orElseThrow(() -> new RuntimeException("Teacher not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", teacherId));
         course.setTeacher(teacher);
         return courseRepository.save(course);
     }

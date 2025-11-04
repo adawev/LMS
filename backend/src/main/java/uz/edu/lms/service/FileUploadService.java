@@ -1,5 +1,6 @@
 package uz.edu.lms.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class FileUploadService {
 
@@ -20,10 +22,10 @@ public class FileUploadService {
     public String uploadFile(MultipartFile file, String folder) throws IOException {
         // Create folder if doesn't exist - use absolute path
         Path folderPath = Paths.get(uploadDir, folder).toAbsolutePath();
-        System.out.println("Creating folder: " + folderPath);
+        log.debug("Creating folder: {}", folderPath);
         if (!Files.exists(folderPath)) {
             Files.createDirectories(folderPath);
-            System.out.println("Folder created: " + folderPath);
+            log.info("Folder created: {}", folderPath);
         }
 
         // Generate unique filename
@@ -35,9 +37,9 @@ public class FileUploadService {
 
         // Save file - use absolute path
         Path filePath = folderPath.resolve(uniqueFilename);
-        System.out.println("Saving file to: " + filePath);
+        log.debug("Saving file to: {}", filePath);
         file.transferTo(filePath.toFile());
-        System.out.println("File saved successfully");
+        log.info("File saved successfully: {}", uniqueFilename);
 
         // Return relative path
         return folder + "/" + uniqueFilename;

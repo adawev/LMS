@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api, { BASE_URL } from '../services/api'
 
 function UploadVideo() {
   const navigate = useNavigate()
@@ -29,8 +29,8 @@ function UploadVideo() {
     const data = new FormData()
     data.append('file', file)
 
-    const response = await axios.post(
-      `http://localhost:8080/api/files/upload/${type}`,
+    const response = await api.post(
+      `/files/upload/${type}`,
       data,
       {
         headers: { 'Content-Type': 'multipart/form-data' },

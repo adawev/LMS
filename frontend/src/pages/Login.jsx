@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import toast from 'react-hot-toast'
 import useAuthStore from '../store/useAuthStore'
 import Logo from '../components/Logo'
+import api from '../services/api'
 
 function Login() {
   const navigate = useNavigate()
@@ -31,7 +31,7 @@ function Login() {
     setLoading(true)
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', loginForm)
+      const response = await api.post('/auth/login', loginForm)
       const { token, email, firstName, lastName, role } = response.data
 
       login({ email, firstName, lastName, role }, token)
@@ -63,7 +63,7 @@ function Login() {
 
     try {
       const { confirmPassword, ...registerData } = registerForm
-      const response = await axios.post('http://localhost:8080/api/auth/register', registerData)
+      const response = await api.post('/auth/register', registerData)
       const { token, email, firstName, lastName, role } = response.data
 
       login({ email, firstName, lastName, role }, token)

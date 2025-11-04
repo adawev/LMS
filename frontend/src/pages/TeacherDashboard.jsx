@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import api from '../services/api'
 
 function TeacherDashboard() {
   const navigate = useNavigate()
@@ -12,7 +12,7 @@ function TeacherDashboard() {
 
   const loadStats = async () => {
     try {
-      const lessonsResponse = await axios.get('http://localhost:8080/api/lessons')
+      const lessonsResponse = await api.get('/lessons')
       setStats(prev => ({ ...prev, lessons: lessonsResponse.data.length }))
     } catch (error) {
       console.error('Error loading stats:', error)

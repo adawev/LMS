@@ -9,6 +9,7 @@ import uz.edu.lms.dto.AuthRequest;
 import uz.edu.lms.dto.AuthResponse;
 import uz.edu.lms.dto.RegisterRequest;
 import uz.edu.lms.entity.User;
+import uz.edu.lms.exception.ResourceNotFoundException;
 import uz.edu.lms.repository.UserRepository;
 import uz.edu.lms.security.JwtService;
 
@@ -23,7 +24,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new IllegalArgumentException("Email already exists");
         }
 
         var user = User.builder()
@@ -58,7 +59,7 @@ public class AuthService {
         );
 
         var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", request.getEmail()));
 
         var jwtToken = jwtService.generateToken(user);
 

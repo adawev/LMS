@@ -22,7 +22,7 @@ import java.util.*;
 public class VideoController {
 
     private final String uploadDir = "uploads";
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/metadata")
     public ResponseEntity<Map<String, String>> saveMetadata(@RequestBody Map<String, String> metadata) {

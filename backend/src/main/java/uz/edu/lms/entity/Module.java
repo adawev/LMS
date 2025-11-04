@@ -41,9 +41,6 @@ public class Module {
     @OneToOne(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private Quiz quiz;
 
-    @OneToOne(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ReflectionAssignment reflectionAssignment;
-
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 

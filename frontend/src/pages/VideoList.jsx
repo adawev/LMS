@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api, { BASE_URL } from '../services/api'
 
 function VideoList() {
   const navigate = useNavigate()
@@ -14,7 +14,7 @@ function VideoList() {
 
   const loadVideos = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/videos/list')
+      const response = await api.get('/videos/list')
       setVideos(response.data)
       if (response.data.length > 0) {
         setSelectedVideo(response.data[0])
@@ -36,7 +36,7 @@ function VideoList() {
 
   const handleDownloadPdf = (pdfUrl, pdfName) => {
     const link = document.createElement('a')
-    link.href = `http://localhost:8080${pdfUrl}`
+    link.href = `${BASE_URL}${pdfUrl}`
     link.download = pdfName
     document.body.appendChild(link)
     link.click()
@@ -110,7 +110,7 @@ function VideoList() {
                     controlsList="nodownload"
                   >
                     <source
-                      src={`http://localhost:8080${selectedVideo?.videoUrl}`}
+                      src={`${BASE_URL}${selectedVideo?.videoUrl}`}
                       type="video/mp4"
                     />
                     Brauzeringiz video playerni qo'llab-quvvatlamaydi.

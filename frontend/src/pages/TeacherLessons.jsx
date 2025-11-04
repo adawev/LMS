@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 import toast from 'react-hot-toast'
 import Logo from '../components/Logo'
 import useAuthStore from '../store/useAuthStore'
@@ -55,8 +54,8 @@ function TeacherLessons() {
     const data = new FormData()
     data.append('file', file)
 
-    const response = await axios.post(
-      `http://localhost:8080/api/files/upload/${type}`,
+    const response = await api.post(
+      `/files/upload/${type}`,
       data,
       {
         headers: { 'Content-Type': 'multipart/form-data' },

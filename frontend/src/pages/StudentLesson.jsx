@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import api from '../services/api'
+import api, { BASE_URL } from '../services/api'
 import toast from 'react-hot-toast'
 import Logo from '../components/Logo'
 import useAuthStore from '../store/useAuthStore'
@@ -65,7 +65,7 @@ function StudentLesson() {
     if (lesson.pdfUrl) {
       const pdfFilename = lesson.pdfUrl.split('/')[1]
       const link = document.createElement('a')
-      link.href = `http://localhost:8080/api/videos/pdf/${pdfFilename}`
+      link.href = `${BASE_URL}/api/videos/pdf/${pdfFilename}`
       link.download = lesson.pdfFileName || pdfFilename
       link.target = '_blank'
       document.body.appendChild(link)
@@ -205,7 +205,7 @@ function StudentLesson() {
                 controlsList="nodownload"
               >
                 <source
-                  src={`http://localhost:8080/api/videos/stream/${lesson.videoUrl.split('/')[1]}`}
+                  src={`${BASE_URL}/api/videos/stream/${lesson.videoUrl.split('/')[1]}`}
                 />
                 Your browser does not support the video player.
               </video>

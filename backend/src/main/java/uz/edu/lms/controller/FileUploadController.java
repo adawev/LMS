@@ -1,6 +1,7 @@
 package uz.edu.lms.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/files")
 @RequiredArgsConstructor
@@ -20,16 +22,15 @@ public class FileUploadController {
     @PostMapping("/upload/video")
     public ResponseEntity<Map<String, String>> uploadVideo(@RequestParam("file") MultipartFile file) {
         try {
-            System.out.println("Uploading video: " + file.getOriginalFilename() + ", size: " + file.getSize());
+            log.info("Uploading video: {}, size: {} bytes", file.getOriginalFilename(), file.getSize());
             String filePath = fileUploadService.uploadFile(file, "videos");
-            System.out.println("Video uploaded successfully: " + filePath);
+            log.info("Video uploaded successfully: {}", filePath);
             Map<String, String> response = new HashMap<>();
             response.put("filePath", filePath);
             response.put("fileName", file.getOriginalFilename());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            System.err.println("Error uploading video: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error uploading video: {}", file.getOriginalFilename(), e);
             return ResponseEntity.internalServerError().build();
         }
     }

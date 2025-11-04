@@ -3,6 +3,7 @@ package uz.edu.lms.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.edu.lms.entity.*;
+import uz.edu.lms.exception.ResourceNotFoundException;
 import uz.edu.lms.repository.QuizAttemptRepository;
 import uz.edu.lms.repository.QuizRepository;
 import uz.edu.lms.repository.UserRepository;
@@ -20,7 +21,7 @@ public class QuizService {
 
     public Quiz getQuizById(Long id) {
         return quizRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz", "id", id));
     }
 
     public Quiz createQuiz(Quiz quiz) {
@@ -30,7 +31,7 @@ public class QuizService {
     public QuizAttempt submitQuiz(Long quizId, Long studentId, List<Answer> answers) {
         Quiz quiz = getQuizById(quizId);
         User student = userRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", studentId));
 
         int totalScore = 0;
         int maxScore = 0;
@@ -61,7 +62,7 @@ public class QuizService {
     public List<QuizAttempt> getStudentAttempts(Long quizId, Long studentId) {
         Quiz quiz = getQuizById(quizId);
         User student = userRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", studentId));
         return quizAttemptRepository.findByQuizAndStudentOrderByStartedAtDesc(quiz, student);
     }
 }
