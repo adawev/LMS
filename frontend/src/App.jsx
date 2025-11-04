@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import StudentDashboard from './pages/StudentDashboard'
+import CourseListing from './pages/CourseListing'
 import TeacherDashboard from './pages/TeacherDashboard'
 import TeacherLessons from './pages/TeacherLessons'
 import StudentLesson from './pages/StudentLesson'
@@ -39,6 +40,7 @@ function App() {
       />
       <Routes>
         <Route path="/" element={<StudentDashboard />} />
+        <Route path="/courses" element={<CourseListing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<MyProfile />} />
         <Route path="/teacher" element={<TeacherDashboard />} />
