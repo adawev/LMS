@@ -34,12 +34,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> {})  // Enable CORS with default config
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**", "/h2-console/**").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/api/lessons", "/api/lessons/**").permitAll()  // Allow GET for all, POST/DELETE restricted by @PreAuthorize
+                        .requestMatchers("/api/videos/**", "/api/files/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers
                         .frameOptions(frame -> frame.sameOrigin())
                 );

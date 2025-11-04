@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Logo from '../components/Logo'
+import useAuthStore from '../store/useAuthStore'
 
 function StudentDashboard() {
   const navigate = useNavigate()
+  const { isAuthenticated, user } = useAuthStore()
   const [lessons, setLessons] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -45,18 +47,31 @@ function StudentDashboard() {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => navigate('/teacher-lessons')}
-                className="text-gray-700 hover:text-orange-600 text-sm font-medium"
-              >
-                Teacher Mode
-              </button>
-              <button
-                onClick={() => navigate('/login')}
-                className="bg-white border border-orange-600 text-orange-600 px-4 py-2 rounded hover:bg-orange-50 text-sm font-medium"
-              >
-                Login / Register
-              </button>
+              {isAuthenticated && user ? (
+                <>
+                  {user.role === 'TEACHER' && (
+                    <button
+                      onClick={() => navigate('/teacher-lessons')}
+                      className="text-gray-700 hover:text-orange-600 text-sm font-medium"
+                    >
+                      My Lessons
+                    </button>
+                  )}
+                  <button
+                    onClick={() => navigate('/profile')}
+                    className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 text-sm font-medium"
+                  >
+                    My Profile
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => navigate('/login')}
+                  className="bg-white border border-orange-600 text-orange-600 px-4 py-2 rounded hover:bg-orange-50 text-sm font-medium"
+                >
+                  Login / Register
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import Logo from '../components/Logo'
+import useAuthStore from '../store/useAuthStore'
 
 function TeacherLessons() {
   const navigate = useNavigate()
+  const { isAuthenticated, user } = useAuthStore()
   const [lessons, setLessons] = useState([])
   const [loading, setLoading] = useState(true)
   const [showUploadModal, setShowUploadModal] = useState(false)
@@ -168,20 +170,33 @@ function TeacherLessons() {
                 onClick={() => navigate('/')}
                 className="text-gray-700 hover:text-orange-600 text-sm font-medium"
               >
-                Student View
+                Home
               </button>
-              <button
-                onClick={() => navigate('/login')}
-                className="bg-white border border-orange-600 text-orange-600 px-4 py-2 rounded hover:bg-orange-50 text-sm font-medium"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => setShowUploadModal(true)}
-                className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 text-sm font-medium"
-              >
-                + New Lesson
-              </button>
+              {isAuthenticated && user ? (
+                <>
+                  <button
+                    onClick={() => navigate('/profile')}
+                    className="text-gray-700 hover:text-orange-600 text-sm font-medium"
+                  >
+                    My Profile
+                  </button>
+                  {user.role === 'TEACHER' && (
+                    <button
+                      onClick={() => setShowUploadModal(true)}
+                      className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 text-sm font-medium"
+                    >
+                      + New Lesson
+                    </button>
+                  )}
+                </>
+              ) : (
+                <button
+                  onClick={() => navigate('/login')}
+                  className="bg-white border border-orange-600 text-orange-600 px-4 py-2 rounded hover:bg-orange-50 text-sm font-medium"
+                >
+                  Login
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -298,15 +313,17 @@ function TeacherLessons() {
                       </svg>
                       Watch
                     </button>
-                    <button
-                      onClick={() => handleDeleteClick(lesson)}
-                      className="text-red-600 hover:text-red-700 font-medium text-sm flex items-center"
-                    >
-                      <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Delete
-                    </button>
+                    {user?.role === 'TEACHER' && (
+                      <button
+                        onClick={() => handleDeleteClick(lesson)}
+                        className="text-red-600 hover:text-red-700 font-medium text-sm flex items-center"
+                      >
+                        <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

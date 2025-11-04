@@ -7,6 +7,7 @@ import StudentLesson from './pages/StudentLesson'
 import UploadVideo from './pages/UploadVideo'
 import VideoList from './pages/VideoList'
 import Login from './pages/Login'
+import MyProfile from './pages/MyProfile'
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
       <Routes>
         <Route path="/" element={<StudentDashboard />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<MyProfile />} />
         <Route path="/teacher" element={<TeacherDashboard />} />
         <Route path="/teacher-lessons" element={<TeacherLessons />} />
         <Route path="/student-lesson/:lessonId" element={<StudentLesson />} />

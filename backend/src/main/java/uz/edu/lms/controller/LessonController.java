@@ -20,6 +20,7 @@ public class LessonController {
     private final VideoLessonService videoLessonService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<VideoLessonDTO> createLesson(@RequestBody CreateLessonRequest request) {
         try {
             VideoLessonDTO lesson = videoLessonService.createLesson(request);
@@ -30,6 +31,7 @@ public class LessonController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<VideoLessonDTO> updateLesson(
             @PathVariable Long id,
             @RequestBody CreateLessonRequest request) {
@@ -64,6 +66,7 @@ public class LessonController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
         try {
             videoLessonService.deleteLesson(id);
