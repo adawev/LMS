@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import Logo from '../components/Logo'
 
 function StudentDashboard() {
   const navigate = useNavigate()
@@ -30,8 +31,11 @@ function StudentDashboard() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <div className="w-8 h-8 bg-gray-900 rounded mr-2"></div>
-                <span className="text-xl font-bold text-gray-900">MoreEduce</span>
+                <Logo className="w-10 h-10 mr-3" />
+                <div>
+                  <span className="text-xl font-bold text-gray-900 block leading-none">MoreEduce</span>
+                  <span className="text-xs text-orange-600 font-medium">Learning Platform</span>
+                </div>
               </div>
               <div className="hidden md:ml-10 md:flex md:space-x-8">
                 <a href="#" className="text-gray-900 hover:text-orange-600 px-3 py-2 text-sm font-medium">Home</a>
@@ -199,8 +203,11 @@ function StudentDashboard() {
             {/* Logo & Description */}
             <div>
               <div className="flex items-center mb-4">
-                <div className="w-8 h-8 bg-gray-900 rounded mr-2"></div>
-                <span className="text-xl font-bold text-gray-900">MoreEduce</span>
+                <Logo className="w-10 h-10 mr-3" />
+                <div>
+                  <span className="text-xl font-bold text-gray-900 block leading-none">MoreEduce</span>
+                  <span className="text-xs text-orange-600">Learning Platform</span>
+                </div>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.

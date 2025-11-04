@@ -112,9 +112,31 @@ public class VideoController {
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {
+                // Detect content type based on file extension
+                String contentType = "video/mp4"; // default
+                String fileExtension = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+
+                switch (fileExtension) {
+                    case "mov":
+                        contentType = "video/quicktime";
+                        break;
+                    case "avi":
+                        contentType = "video/x-msvideo";
+                        break;
+                    case "mkv":
+                        contentType = "video/x-matroska";
+                        break;
+                    case "webm":
+                        contentType = "video/webm";
+                        break;
+                    default:
+                        contentType = "video/mp4";
+                }
+
                 return ResponseEntity.ok()
-                        .contentType(MediaType.parseMediaType("video/mp4"))
+                        .contentType(MediaType.parseMediaType(contentType))
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
+                        .header(HttpHeaders.ACCEPT_RANGES, "bytes")
                         .body(resource);
             } else {
                 return ResponseEntity.notFound().build();

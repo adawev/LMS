@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import toast from 'react-hot-toast'
+import Logo from '../components/Logo'
 
 function TeacherLessons() {
   const navigate = useNavigate()
@@ -66,11 +68,12 @@ function TeacherLessons() {
     e.preventDefault()
 
     if (!uploadForm.videoFile) {
-      alert('Please select a video file!')
+      toast.error('Please select a video file!')
       return
     }
 
     setUploading(true)
+    const loadingToast = toast.loading('Uploading lesson...')
 
     try {
       // Upload video
@@ -93,7 +96,7 @@ function TeacherLessons() {
 
       await axios.post('http://localhost:8080/api/lessons', lessonData)
 
-      alert('Lesson created successfully!')
+      toast.success('Lesson created successfully! 🎉', { id: loadingToast })
       setShowUploadModal(false)
       setUploadForm({
         title: '',
@@ -105,7 +108,7 @@ function TeacherLessons() {
       loadLessons()
     } catch (error) {
       console.error('Error creating lesson:', error)
-      alert('Failed to create lesson!')
+      toast.error('Failed to create lesson. Please try again.', { id: loadingToast })
     } finally {
       setUploading(false)
     }
@@ -116,13 +119,15 @@ function TeacherLessons() {
       return
     }
 
+    const loadingToast = toast.loading('Deleting lesson...')
+
     try {
       await axios.delete(`http://localhost:8080/api/lessons/${lessonId}`)
-      alert('Lesson deleted successfully!')
+      toast.success('Lesson deleted successfully!', { id: loadingToast })
       loadLessons()
     } catch (error) {
       console.error('Error deleting lesson:', error)
-      alert('Failed to delete lesson!')
+      toast.error('Failed to delete lesson!', { id: loadingToast })
     }
   }
 
@@ -134,8 +139,11 @@ function TeacherLessons() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <div className="w-8 h-8 bg-gray-900 rounded mr-2"></div>
-                <span className="text-xl font-bold text-gray-900">MoreEduce</span>
+                <Logo className="w-10 h-10 mr-3" />
+                <div>
+                  <span className="text-xl font-bold text-gray-900 block leading-none">MoreEduce</span>
+                  <span className="text-xs text-orange-600 font-medium">Teaching Portal</span>
+                </div>
               </div>
               <div className="hidden md:ml-10 md:flex md:space-x-8">
                 <a href="#" onClick={() => navigate('/')} className="text-gray-700 hover:text-orange-600 px-3 py-2 text-sm font-medium">Home</a>
@@ -463,8 +471,11 @@ function TeacherLessons() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <div className="w-8 h-8 bg-gray-900 rounded mr-2"></div>
-                <span className="text-xl font-bold text-gray-900">MoreEduce</span>
+                <Logo className="w-10 h-10 mr-3" />
+                <div>
+                  <span className="text-xl font-bold text-gray-900 block leading-none">MoreEduce</span>
+                  <span className="text-xs text-orange-600">Learning Platform</span>
+                </div>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed">
                 Professional learning management system for modern education.

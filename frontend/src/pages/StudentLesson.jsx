@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 function StudentLesson() {
   const { lessonId } = useParams()
@@ -25,7 +26,7 @@ function StudentLesson() {
       setLesson(response.data)
     } catch (error) {
       console.error('Error loading lesson:', error)
-      alert('Failed to load lesson')
+      toast.error('Failed to load lesson')
     } finally {
       setLoading(false)
     }
