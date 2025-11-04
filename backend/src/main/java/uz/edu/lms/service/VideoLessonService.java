@@ -22,12 +22,17 @@ public class VideoLessonService {
 
     @Transactional
     public VideoLessonDTO createLesson(CreateLessonRequest request) {
-        Module module = moduleRepository.findById(request.getModuleId())
-                .orElseThrow(() -> new RuntimeException("Module not found with id: " + request.getModuleId()));
+        Module module = null;
 
-        // Check if module already has a video lesson
-        if (module.getVideoLesson() != null) {
-            throw new RuntimeException("Module already has a video lesson");
+        // Module is optional now
+        if (request.getModuleId() != null) {
+            module = moduleRepository.findById(request.getModuleId())
+                    .orElse(null);
+
+            // Check if module already has a video lesson
+            if (module != null && module.getVideoLesson() != null) {
+                throw new RuntimeException("Module already has a video lesson");
+            }
         }
 
         VideoLesson videoLesson = VideoLesson.builder()
@@ -114,7 +119,8 @@ public class VideoLessonService {
 
     private VideoLessonDTO toDTO(VideoLesson videoLesson) {
         Module module = videoLesson.getModule();
-        return VideoLessonDTO.builder()
+
+        VideoLessonDTO.VideoLessonDTOBuilder builder = VideoLessonDTO.builder()
                 .id(videoLesson.getId())
                 .title(videoLesson.getTitle())
                 .description(videoLesson.getDescription())
@@ -124,13 +130,21 @@ public class VideoLessonService {
                 .duration(videoLesson.getDuration())
                 .thumbnailUrl(videoLesson.getThumbnailUrl())
                 .transcript(videoLesson.getTranscript())
-                .moduleId(module.getId())
-                .moduleName(module.getTitle())
-                .moduleOrder(module.getOrderNumber())
-                .courseId(module.getCourse().getId())
-                .courseName(module.getCourse().getTitle())
                 .createdAt(videoLesson.getCreatedAt())
-                .updatedAt(videoLesson.getUpdatedAt())
-                .build();
+                .updatedAt(videoLesson.getUpdatedAt());
+
+        // Add module info only if module exists
+        if (module != null) {
+            builder.moduleId(module.getId())
+                   .moduleName(module.getTitle())
+                   .moduleOrder(module.getOrderNumber())
+                   .courseId(module.getCourse().getId())
+                   .courseName(module.getCourse().getTitle());
+        } else {
+            builder.moduleName("General")
+                   .courseName("Learning Theory");
+        }
+
+        return builder.build();
     }
 }
