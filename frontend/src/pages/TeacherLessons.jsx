@@ -9,6 +9,8 @@ function TeacherLessons() {
   const [lessons, setLessons] = useState([])
   const [loading, setLoading] = useState(true)
   const [showUploadModal, setShowUploadModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [lessonToDelete, setLessonToDelete] = useState(null)
   const [uploadForm, setUploadForm] = useState({
     title: '',
     description: '',
@@ -114,21 +116,31 @@ function TeacherLessons() {
     }
   }
 
-  const handleDeleteLesson = async (lessonId) => {
-    if (!confirm('Are you sure you want to delete this lesson?')) {
-      return
-    }
+  const handleDeleteClick = (lesson) => {
+    setLessonToDelete(lesson)
+    setShowDeleteModal(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!lessonToDelete) return
 
     const loadingToast = toast.loading('Deleting lesson...')
 
     try {
-      await axios.delete(`http://localhost:8080/api/lessons/${lessonId}`)
+      await axios.delete(`http://localhost:8080/api/lessons/${lessonToDelete.id}`)
       toast.success('Lesson deleted successfully!', { id: loadingToast })
+      setShowDeleteModal(false)
+      setLessonToDelete(null)
       loadLessons()
     } catch (error) {
       console.error('Error deleting lesson:', error)
       toast.error('Failed to delete lesson!', { id: loadingToast })
     }
+  }
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false)
+    setLessonToDelete(null)
   }
 
   return (
@@ -157,6 +169,12 @@ function TeacherLessons() {
                 className="text-gray-700 hover:text-orange-600 text-sm font-medium"
               >
                 Student View
+              </button>
+              <button
+                onClick={() => navigate('/login')}
+                className="bg-white border border-orange-600 text-orange-600 px-4 py-2 rounded hover:bg-orange-50 text-sm font-medium"
+              >
+                Login
               </button>
               <button
                 onClick={() => setShowUploadModal(true)}
@@ -281,7 +299,7 @@ function TeacherLessons() {
                       Watch
                     </button>
                     <button
-                      onClick={() => handleDeleteLesson(lesson.id)}
+                      onClick={() => handleDeleteClick(lesson)}
                       className="text-red-600 hover:text-red-700 font-medium text-sm flex items-center"
                     >
                       <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -461,6 +479,48 @@ function TeacherLessons() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && lessonToDelete && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+          <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="p-6">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+                <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+
+              <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+                Delete Lesson
+              </h3>
+
+              <p className="text-sm text-gray-600 text-center mb-2">
+                Are you sure you want to delete <span className="font-semibold text-gray-900">"{lessonToDelete.title}"</span>?
+              </p>
+
+              <p className="text-sm text-gray-500 text-center mb-6">
+                This action cannot be undone. All lesson data including video and PDF materials will be permanently removed.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleDeleteCancel}
+                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors"
+                >
+                  Delete Lesson
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -51,7 +51,10 @@ function StudentDashboard() {
               >
                 Teacher Mode
               </button>
-              <button className="bg-white border border-orange-600 text-orange-600 px-4 py-2 rounded hover:bg-orange-50 text-sm font-medium">
+              <button
+                onClick={() => navigate('/login')}
+                className="bg-white border border-orange-600 text-orange-600 px-4 py-2 rounded hover:bg-orange-50 text-sm font-medium"
+              >
                 Login / Register
               </button>
             </div>
