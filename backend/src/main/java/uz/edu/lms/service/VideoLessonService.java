@@ -107,7 +107,7 @@ public class VideoLessonService {
     @Transactional
     public void deleteLesson(Long id) {
         if (!videoLessonRepository.existsById(id)) {
-            throw new RuntimeException("Video lesson not found with id: " + id));
+            throw new RuntimeException("Video lesson not found with id: " + id);
         }
         videoLessonRepository.deleteById(id);
     }
