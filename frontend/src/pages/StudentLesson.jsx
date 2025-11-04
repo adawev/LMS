@@ -23,6 +23,10 @@ function StudentLesson() {
   const loadLesson = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/api/lessons/${lessonId}`)
+      console.log('Loaded lesson:', response.data)
+      const videoFilename = response.data.videoUrl?.split('/')[1]
+      console.log('Video filename:', videoFilename)
+      console.log('Full video URL:', `http://localhost:8080/api/videos/stream/${videoFilename}`)
       setLesson(response.data)
     } catch (error) {
       console.error('Error loading lesson:', error)
@@ -50,12 +54,15 @@ function StudentLesson() {
 
   const handleDownloadPdf = () => {
     if (lesson.pdfUrl) {
+      const pdfFilename = lesson.pdfUrl.split('/')[1]
       const link = document.createElement('a')
-      link.href = `http://localhost:8080${lesson.pdfUrl}`
-      link.download = lesson.pdfFileName
+      link.href = `http://localhost:8080/api/videos/pdf/${pdfFilename}`
+      link.download = lesson.pdfFileName || pdfFilename
+      link.target = '_blank'
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+      toast.success('PDF download started!')
     }
   }
 
@@ -137,11 +144,14 @@ function StudentLesson() {
                 onTimeUpdate={handleTimeUpdate}
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
+                onError={(e) => {
+                  console.error('Video error:', e)
+                  toast.error('Error loading video. Please try again.')
+                }}
                 controlsList="nodownload"
               >
                 <source
-                  src={`http://localhost:8080${lesson.videoUrl}`}
-                  type="video/mp4"
+                  src={`http://localhost:8080/api/videos/stream/${lesson.videoUrl.split('/')[1]}`}
                 />
                 Your browser does not support the video player.
               </video>
