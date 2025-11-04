@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 import Logo from '../components/Logo'
 import useAuthStore from '../store/useAuthStore'
 
@@ -16,7 +16,7 @@ function StudentDashboard() {
 
   const loadLessons = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/lessons')
+      const response = await api.get('/lessons')
       setLessons(response.data)
     } catch (error) {
       console.error('Error loading lessons:', error)

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import api from '../services/api'
 import toast from 'react-hot-toast'
 
 function StudentLesson() {
@@ -22,7 +22,7 @@ function StudentLesson() {
 
   const loadLesson = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/lessons/${lessonId}`)
+      const response = await api.get(`/lessons/${lessonId}`)
       console.log('Loaded lesson:', response.data)
       const videoFilename = response.data.videoUrl?.split('/')[1]
       console.log('Video filename:', videoFilename)
@@ -38,7 +38,7 @@ function StudentLesson() {
 
   const loadAllLessons = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/lessons')
+      const response = await api.get('/lessons')
       setAllLessons(response.data)
     } catch (error) {
       console.error('Error loading lessons:', error)
